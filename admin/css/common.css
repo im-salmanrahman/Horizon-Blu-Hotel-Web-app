@@ -107,3 +107,27 @@ input[type=number] {
     height: 1.7px;
 
 }
+
+.custom-alert{
+    position: fixed;
+    top: 130px;
+    right: 25px;
+}
+
+#dashboard-menu{
+    background-color: #003366;
+    position: fixed;
+    height: 100%;
+}
+
+@media screen and (max-width: 992px){
+    #dashboard-menu{
+        background-color: #003366;
+        height: auto;
+        width: 100%
+    }
+    #main-content{
+        margin-top: 60px;
+
+    }
+}
