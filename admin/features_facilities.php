@@ -3,328 +3,233 @@
     require('include/db_config.php');
     adminLogin();
 
-
-    if(isset($_POST['add_feature']))
+    if(isset($_GET['seen']))
     {
-        $frm_data = filteration($_POST);
+        $frm_data = filteration($_GET);
 
-        if($frm_data['seen']=='all'){
+        if($frm_data['seen'] == 'all'){
             $q = "UPDATE `user_queries` SET `seen`=?";
             $values = [1];
-            if(update($q, $values, 'i')){
-                alert('success', 'Marked all as read!');
+            if(update($q, $values, 'i'))
+            {
+                $_SESSION['alert'] = ['type' => 'success', 'msg' => 'All query marked as read!'];
             }
-            else{
-                alert('error', 'Operation Failed!');
+            else
+            {
+                $_SESSION['alert'] = ['type' => 'error', 'msg' => 'Something went wrong!'];
             }
         }
         else{
             $q = "UPDATE `user_queries` SET `seen`=? WHERE `sl_no`=?";
             $values = [1, $frm_data['seen']];
-            if(update($q, $values, 'ii')){
-                alert('success', 'Marked as read!');
+            if(update($q, $values, 'ii'))
+            {
+                $_SESSION['alert'] = ['type' => 'success', 'msg' => 'Query marked as read!'];
             }
-            else{
-
+            else
+            {
+                $_SESSION['alert'] = ['type' => 'error', 'msg' => 'Something went wrong!'];
             }
         }
+        header("Location: user_queries.php");
+        exit;
+    }
+
+    if(isset($_GET['del']))
+    {
+        $frm_data = filteration($_GET);
+
+        if($frm_data['del'] == 'all'){
+            $q = "DELETE FROM `user_queries`";
+            if(mysqli_query($con, $q))
+            {
+                $_SESSION['alert'] = ['type' => 'success', 'msg' => 'All query deleted successfully!'];
+            }
+            else
+            {
+                $_SESSION['alert'] = ['type' => 'error', 'msg' => 'Something went wrong!'];
+            }
+        }
+        else{
+            $q = "DELETE FROM `user_queries` WHERE `sl_no`=?";
+            $values = [$frm_data['del']];
+            if(delete($q, $values, 'i'))
+            {
+                $_SESSION['alert'] = ['type' => 'success', 'msg' => 'Query deleted successfully!'];
+            }
+            else
+            {
+                $_SESSION['alert'] = ['type' => 'error', 'msg' => 'Something went wrong!'];
+            }
+        }
+        header("Location: user_queries.php");
+        exit;
     }
 ?>
 
-
-
-    
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Rooms</title>
+    <title>Admin Panel - Features & Facilities</title>
     <?php require('include/links.php');?> 
 </head>
 <body class="bg-light">
+
+    <?php
+    if(isset($_SESSION['alert'])) {
+        $type = $_SESSION['alert']['type'] == 'success' ? 'success' : 'danger';
+        $msg = $_SESSION['alert']['msg'];
+        echo <<<alert
+        <div class="alert alert-$type alert-dismissible fade show custom-alert" role="alert" style="position:fixed;top:20px;right:20px;z-index:9999;min-width:250px;">
+            <strong>$msg</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        alert;
+        unset($_SESSION['alert']);
+    }
+    ?>
 
     <?php require("include/header.php"); ?>
     
     <div class="container-fluid" id="main-content">
         <div class="row">
             <div class="col-lg-10 ms-auto p-4 overflow-hidden">
-                <h3 class="text-dark mb-4">Rooms</h3>
+                <h3 class="text-dark mb-4">FEATURES & FACILITIES</h3>
 
-                <!--- General settings section --->
+
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body">
-                        <div class="text-end mb-4">
-                            <button type="button" class="custom-bg text-white shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#add-room">
+
+                       <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title m-0">Features</h5>
+                            <button type="button" class="custom-bg text-white shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#feature-s">
                                 <i class="bi bi-plus-square"></i> Add
                             </button>
                         </div>
 
-                        <div class="table-responsive-lg" style="height: 450px; overflow-y: scroll;">
+                       <div class="table-responsive-md" style="height: 350px; overflow-y: scroll;">
                             <table class="table table-hover border">
-                                <thead>
-                                    <tr class="my-custom-bg text-light">
-                                        <th scope="col">#</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Guests</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="room-data">
-                                </tbody>
-                            </table>
-                        </div>
+                            <thead>
+                                <tr class="custom-table-top-bg">
+                                <th scope="col" width="2%">#</th>
+                                <th scope="col" width="10%">Icon</th>
+                                <th scope="col" width="15%">Name</th>
+                                <th scope="col" width="40%">Description</th>
+                                <th scope="col" width="10%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id = "features-data">
+                            </tbody>
+                            </table> 
+                       </div>
                     </div>
                 </div>
-
-                <!--- Add room modal --->
-
-                <div class="modal fade" id="add-room" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <form id="add_room_form" autocomplete="off">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Add Room</h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Name</label>
-                                            <input type="text" name="feature_name" class="form-control shadow-none" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Price</label>
-                                            <input type="text" min="1" name="price" class="form-control shadow-none" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Quantity</label>
-                                            <input type="text" min="1" name="quantity" class="form-control shadow-none" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Adult (Max.)</label>
-                                            <input type="text" min="1" name="adult" class="form-control shadow-none" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Children (Max.)</label>
-                                            <input type="text" min="1" name="children" class="form-control shadow-none" required>
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <label class="form-label fw-bold">Features</label>
-                                            <div class="row">
-                                                <?php 
-                                                    $result = selectAll('features');
-                                                    while($opt = mysqli_fetch_assoc($result)){
-                                                        echo"
-                                                            <div class='col-md-3'>
-                                                                <label>
-                                                                    <input type='checkbox' name='features' value='$opt[id]' class='form-check-input shadow-none'>
-                                                                    $opt[name]///////////////
-                                                                </label>
-                                                            </div>
-
-                                                        ";
-                                                    }
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="reset" class="btn custom-bg text-white shadow-none" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                        
-                    </div>
-                </div>
-
-                <!--- Shutdown section --->
-
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="card-title m-0">Shutdown Website</h5>
-                            <div class="form-check form-switch">
-                                <form>
-                                    <input onchange="upd_shutdown(this.value)" class="form-check-input" type="checkbox" id="shutdown-toggle">
-                                </form>
-                            </div>
-                        </div>
-                        <p class="card-text border-0 shadow-none">
-                            No customers will be allowed to book hotel room, when shutdown mode is turned on.
-                        </p>
-                    </div>
-                </div>
-
-
-                <!--- Contact details section --->
 
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="card-title m-0">Contact Settings</h5>
-                            <button type="button" class="custom-bg text-white shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#contact-s">
-                                <i class="bi bi-pencil-square text-white"></i> Edit
+                        
+                       <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title m-0">Facilities</h5>
+                            <button type="button" class="custom-bg text-white shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#facility-s">
+                                <i class="bi bi-plus-square"></i> Add
                             </button>
-                        </div> 
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Address</h6>
-                                    <p class="card-text" id="address"></p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Google Map</h6>
-                                    <p class="card-text" id="gmap"></p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Phone Numbers</h6>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-telephone-fill"></i>
-                                        <span id="phone1"></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <i class="bi bi-telephone-fill"></i>
-                                        <span id="phone2"></span>
-                                    </p>
-                                    <div class="mb-4">
-                                        <h6 class="card-subtitle mb-1 fw-bold">E-mail</h6>
-                                        <p class="card-text" id="email"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Social Links</h6>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-facebook"></i>
-                                        <span id="fb"></span>
-                                    </p>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-twitter-x"></i>
-                                        <span id="tweet"></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <i class="bi bi-instagram"></i>
-                                        <span id="insta"></span>
-                                    </p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">iFrame</h6>
-                                    <iFrame id="iframe" class="border p-2 w-100" loading="lazy"></iFrame>
-                                </div>
-                            </div>
                         </div>
+
+                       <div class="table-responsive-md" style="height: 350px; overflow-y: scroll;">
+                            <table class="table table-hover border">
+                            <thead>
+                                <tr class="custom-table-top-bg">
+                                <th scope="col" width="2%">#</th>
+                                <th scope="col" width="10%">Icon</th>
+                                <th scope="col" width="15%">Name</th>
+                                <th scope="col" width="40%">Description</th>
+                                <th scope="col" width="10%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id = "facilities-data">
+                            </tbody>
+                            </table> 
+                       </div>
                     </div>
                 </div>
+
 
             </div>
         </div>
     </div>
 
 
+    <!--- Feature modal --->
+
+    <div class="modal fade" id="feature-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="feature_s_form" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Feature</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Name</label>
+                            <input type="text" name="feature_name" class="form-control shadow-none" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Icon</label>
+                            <input type="file" name="feature_icon" accept=".jpg, .png, .webp, .jpeg, .svg" class="form-control shadow-none" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="feature_description" class="form-control shadow-none" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn custom-bg text-white shadow-none" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+    <!--- Facility modal --->
+
+    <div class="modal fade" id="facility-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="facility_s_form" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Facility</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Name</label>
+                            <input type="text" name="facility_name" class="form-control shadow-none" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Icon</label>
+                            <input type="file" name="facility_icon" accept=".jpg, .png, .webp, .jpeg, .svg" class="form-control shadow-none" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="facility_description" class="form-control shadow-none" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn custom-bg text-white shadow-none" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
     <?php require('include/scripts.php'); ?>
-    <script>
-        let general_data;
 
-        let general_s_form = document.getElementById('general_s_form');
-        let page_title_inp = document.getElementById('page_title_inp');
-        let site_about_inp = document.getElementById('site_about_inp');
-
-        function get_general()
-        {
-            let page_title = document.getElementById('page_title');
-            let site_about = document.getElementById('site_about');
-
-            let shutdown_toggle = document.getElementById('shutdown-toggle');
-
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                general_data = JSON.parse(this.responseText);
-
-                page_title.innerText = general_data.page_title;
-                site_about.innerText = general_data.site_about;
-
-                page_title_inp.value = general_data.page_title;
-                site_about_inp.value = general_data.site_about;
-
-                if(general_data.shutdown == 0){
-                    shutdown_toggle.checked = false;
-                    shutdown_toggle.value = 0;
-                }
-                else
-                {
-                    shutdown_toggle.checked = true;
-                    shutdown_toggle.value = 1;
-                }
-            }
-
-            xhr.send('get_general');
-        }
-
-        general_s_form.addEventListener('submit', function(e){
-            e.preventDefault();
-            upd_general(page_title_inp.value, site_about_inp.value);
-        })
-
-        function upd_general(page_title_val, site_about_val)
-        {
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                var myModal = document.getElementById('general-s')
-                var modal = bootstrap.Modal.getInstance(myModal)
-                modal.hide();
-
-                if(this.responseText == 1)
-                {
-                    alert('success', 'Changes saved!');
-                    get_general();
-                }
-                else
-                {
-                    alert('error', 'No changes made!'); 
-                }
-            }
-
-            xhr.send('page_title='+page_title_val+'&site_about='+site_about_val+'&upd_general');
-        }
-
-        function upd_shutdown(val)
-        {
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                if(this.responseText == 1 && general_data.shutdown==0)
-                {
-                    alert('success', 'Website has been shut down!');
-                }
-                else
-                {
-                    alert('success', 'Website is Live!'); 
-                }
-                get_general();
-            }
-
-            xhr.send('upd_shutdown='+val);
-        }
-
-        window.onload = function(){
-            get_general();
-        }
-
-    </script>
+    <script src="scripts/features_facilities.js"></script>
 </body>
 </html>
 

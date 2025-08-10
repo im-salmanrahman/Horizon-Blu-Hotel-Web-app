@@ -30,72 +30,46 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/wifi.png" width="40px">
-                        <h5 class="m-0 ms-3">WiFi</h5>
+            <?php 
+                $result = selectAll('facilities');
+                $path = FACILITIES_IMG_PATH;
+
+                while($row = mysqli_fetch_assoc($result)){
+                    echo <<<data
+                    <div class="col-lg-4 col-md-6 mb-5 px-4">
+                        <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="$path$row[icon]" width="100px">
+                                <h5 class="m-0 ms-3">$row[name]</h5>
+                            </div>
+                            <p>
+                            $row[description]
+                            </p>
+                        </div>
                     </div>
-                    <p>
-                    Stay seamlessly connected with our complimentary high-speed WiFi available in all guest rooms and public areas. Whether you need to work, stream, or simply browse, our reliable internet access will keep you connected.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/smart-tv.png" width="40px">
-                        <h5 class="m-0 ms-3">Smart TV</h5>
+                    data;
+                }
+            ?>
+            <?php 
+                $result = selectAll('features');
+                $path = FEATURES_IMG_PATH;
+
+                while($row = mysqli_fetch_assoc($result)){
+                    echo <<<data
+                    <div class="col-lg-4 col-md-6 mb-5 px-4">
+                        <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="$path$row[icon]" width="100px">
+                                <h5 class="m-0 ms-3">$row[name]</h5>
+                            </div>
+                            <p>
+                            $row[description]
+                            </p>
+                        </div>
                     </div>
-                    <p>
-                    Enjoy a wide range of entertainment options with the smart TV provided in your room. Access your favorite streaming services, catch up on the news, or simply relax with a movie after a long day of travel or exploration.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/air-conditioner.png" width="40px">
-                        <h5 class="m-0 ms-3">Air Conditioner</h5>
-                    </div>
-                    <p>
-                    Ensure your room is always at the perfect temperature with our individually controlled air conditioning system. Adjust the settings to your preference and enjoy a cool and comfortable environment throughout your stay.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/room-heater.png" width="40px">
-                        <h5 class="m-0 ms-3">Room Heater</h5>
-                    </div>
-                    <p>
-                    For those cooler evenings or if you prefer a warmer ambiance, each room is also equipped with a convenient room heater. Easily adjust the temperature to create a cozy and comfortable atmosphere.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/gym.png" width="40px">
-                        <h5 class="m-0 ms-3">Gymnasium</h5>
-                    </div>
-                    <p>
-                    Maintain your fitness routine while traveling in our well-equipped gymnasium. Featuring a range of modern cardio and strength-training equipment, our gym allows you to stay active and energized during your stay.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-5 px-4">
-                <div class="bg-white rounded shadow p-4 border-top border-4 border-dark pop">
-                    <div class="d-flex align-items-center mb-2">
-                        <img src="images/features/swimming-pool.png" width="40px">
-                        <h5 class="m-0 ms-3">Swimming Pool</h5>
-                    </div>
-                    <p>
-                    Take a refreshing break and unwind by our inviting swimming pool. Whether you want to swim laps for exercise or simply soak up the sun and enjoy a leisurely dip, our pool area provides a perfect oasis for relaxation.
-                    </p>
-                </div>
-            </div>
+                    data;
+                }
+            ?>
         </div>
     </div>
 
