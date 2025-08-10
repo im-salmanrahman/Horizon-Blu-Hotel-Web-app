@@ -67,7 +67,7 @@
 
                 <!--- Shutdown section --->
 
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">Shutdown Website</h5>
@@ -145,109 +145,144 @@
                     </div>
                 </div>
 
+                <!--- Contact details modal --->
+
+                <div class="modal fade" id="contact-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <form id=contact_s_form>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Contact Settings</h5>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="container-fluid p-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Address</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-house"></i></span>
+                                                        <input type="text" name="address" id="address_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Google Map Link</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+                                                        <input type="text" name="gmap" id="gmap_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Phone Numbers (with country code)</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                                        <input type="number" name="phone1" id="phone1_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                                        <input type="number" name="phone2" id="phone2_inp" class="form-control shadow-none">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                    <label class="form-label fw-bold">Email</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                        <input type="email" name="email" id="email_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Social Links</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-facebook"></i></span>
+                                                        <input type="text" name="fb" id="fb_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-twitter-x"></i></span>
+                                                        <input type="text" name="tweet" id="tweet_inp" class="form-control shadow-none">
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-instagram"></i></span>
+                                                        <input type="text" name="insta" id="insta_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                    <label class="form-label fw-bold">iFrame link</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+                                                        <input type="text" name="iframe" id="iframe_inp" class="form-control shadow-none" required>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="contacts_inp(contacts_data)" class="btn custom-bg text-white shadow-none" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+
+                <!--- Management Team section --->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title m-0">Management Team</h5>
+                            <button type="button" class="custom-bg text-white shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#team-s">
+                                <i class="bi bi-person-add"></i> Add
+                            </button>
+                        </div>
+
+                        <div class="row" id="team-data">
+                            
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--- Management Team modal --->
+
+                <div class="modal fade" id="team-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form id="team_s_form" enctype="multipart/form-data">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Management Team Member</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Name</label>
+                                        <input type="text" name="member_name" id="member_name_inp" class="form-control shadow-none" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Picture</label>
+                                        <input type="file" name="member_picture" id="member_picture_inp" accept=".jpg, .png, .webp, .jpeg" class="form-control shadow-none" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="member_name.value='', member_picture.value=''" class="btn custom-bg text-white shadow-none" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
 
     <?php require('include/scripts.php'); ?>
-    <script>
-        let general_data;
-
-        let general_s_form = document.getElementById('general_s_form');
-        let page_title_inp = document.getElementById('page_title_inp');
-        let site_about_inp = document.getElementById('site_about_inp');
-
-        function get_general()
-        {
-            let page_title = document.getElementById('page_title');
-            let site_about = document.getElementById('site_about');
-
-            let shutdown_toggle = document.getElementById('shutdown-toggle');
-
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                general_data = JSON.parse(this.responseText);
-
-                page_title.innerText = general_data.page_title;
-                site_about.innerText = general_data.site_about;
-
-                page_title_inp.value = general_data.page_title;
-                site_about_inp.value = general_data.site_about;
-
-                if(general_data.shutdown == 0){
-                    shutdown_toggle.checked = false;
-                    shutdown_toggle.value = 0;
-                }
-                else
-                {
-                    shutdown_toggle.checked = true;
-                    shutdown_toggle.value = 1;
-                }
-            }
-
-            xhr.send('get_general');
-        }
-
-        general_s_form.addEventListener('submit', function(e){
-            e.preventDefault();
-            upd_general(page_title_inp.value, site_about_inp.value);
-        })
-
-        function upd_general(page_title_val, site_about_val)
-        {
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                var myModal = document.getElementById('general-s')
-                var modal = bootstrap.Modal.getInstance(myModal)
-                modal.hide();
-
-                if(this.responseText == 1)
-                {
-                    alert('success', 'Changes saved!');
-                    get_general();
-                }
-                else
-                {
-                    alert('error', 'No changes made!'); 
-                }
-            }
-
-            xhr.send('page_title='+page_title_val+'&site_about='+site_about_val+'&upd_general');
-        }
-
-        function upd_shutdown(val)
-        {
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "ajax/settings_crud.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = function(){
-                if(this.responseText == 1 && general_data.shutdown==0)
-                {
-                    alert('success', 'Website has been shut down!');
-                }
-                else
-                {
-                    alert('success', 'Website is Live!'); 
-                }
-                get_general();
-            }
-
-            xhr.send('upd_shutdown='+val);
-        }
-
-        window.onload = function(){
-            get_general();
-        }
-
-    </script>
+    <script  src="scripts/settings.js"></script>
 </body>
 </html>
 

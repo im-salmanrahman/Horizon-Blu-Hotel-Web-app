@@ -118,9 +118,30 @@ input[type=number] {
     background-color: #003366;
     position: fixed;
     height: 100%;
+    z-index: 11;
 }
 
-@media screen and (max-width: 992px){
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media screen and (max-width: 991px){
     #dashboard-menu{
         background-color: #003366;
         height: auto;
@@ -130,4 +151,17 @@ input[type=number] {
         margin-top: 60px;
 
     }
+}
+
+.custom-table-top-bg{
+    background-color: #003366;
+    color: white;
+}
+
+.fixed-action-btn {
+    min-width: 150px;   /* or width: 120px; for exact width */
+    /* height: 36px;   Optional: set a fixed height */
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
 }

@@ -3,6 +3,7 @@
     $username = 'root';
     $password = '';
     $database = 'horizon blu hotel web app';
+
     $con = mysqli_connect($host_name, $username, $password, $database);
 
     if(!$con){
@@ -11,12 +12,23 @@
 
     function filteration($data){
         foreach($data as $key => $value){
-            $data[$key] = trim($value);
-            $data[$key] = stripcslashes($value);
-            $data[$key] = htmlspecialchars($value);
-            $data[$key] = strip_tags($value);
+            $value = trim($value);
+            $value = stripslashes($value);
+            $value = strip_tags($value);
+            $value = htmlspecialchars($value);
+
+            $data[$key] = $value;
         }
         return $data;
+    }
+
+
+    function selectAll($table)
+    {
+        $con = $GLOBALS['con'];
+        $result = mysqli_query($con, "SELECT * FROM $table");
+        return $result;
+
     }
 
     function select($sql, $values, $data_types)
@@ -56,6 +68,46 @@
         }
         else{
             die("Query cannot be prepared - Update");
+        }
+    }
+
+    function insert($sql, $values, $data_types)
+    {
+        $con = $GLOBALS['con'];
+        if($stmt = mysqli_prepare($con, $sql)){
+            mysqli_stmt_bind_param($stmt, $data_types,...$values);
+            if(mysqli_stmt_execute($stmt)){
+                $result = mysqli_stmt_affected_rows($stmt);
+                mysqli_stmt_close($stmt);
+                return $result;
+            }
+            else{
+                mysqli_stmt_close($stmt);
+                die("Query cannot be executed - Insert");
+            }
+        }
+        else{
+            die("Query cannot be prepared - Insert");
+        }
+    }
+
+    function delete($sql, $values, $data_types)
+    {
+        $con = $GLOBALS['con'];
+        if($stmt = mysqli_prepare($con, $sql)){
+            mysqli_stmt_bind_param($stmt, $data_types,...$values);
+            if(mysqli_stmt_execute($stmt)){
+                $result = mysqli_stmt_affected_rows($stmt);
+                mysqli_stmt_close($stmt);
+                return $result;
+            }
+            else{
+                mysqli_stmt_close($stmt);
+                die("Query cannot be executed - Delete");
+            }
+        }
+        else{
+            die("Query cannot be prepared - Delete");
         }
     }
 ?>
